@@ -1,7 +1,6 @@
 import  React, {useState} from "react";
 import './App.css'
 import ItemClass from "./ItemClass";
-import item from "./ItemClass";
 import ItemItem from "./Item";
 
 export const Items: ItemClass[] = [];
