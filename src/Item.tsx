@@ -8,7 +8,7 @@ function ItemItem(props: ItemProps) {
 
     return (
         <div>
-            <p>{props.item.name}{props.item.category}</p>
+            <p>Megnevezés: {props.item.name} | Kategória: {props.item.category}</p>
             <button onClick={props.onRemove}>Delete</button>
         </div>
     );

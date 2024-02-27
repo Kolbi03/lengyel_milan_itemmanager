@@ -13,23 +13,27 @@ function ItemCreator() {
     const [page, setPage] = useState(true);
     const [searchedName, setSearchedName] = useState('');
     const [toggleConfirmation, setToggleConfirmation] = useState(false);
-    const [selectedTodoDelete, setSelectedTodoDelete] = useState<ItemClass>();
-    const [items, setItems] = useState(() => [new ItemClass('Boltba menni', 'Jármű')]);
+    const [selectedItemDelete, setSelectedItemDelete] = useState<ItemClass>();
+    const [items, setItems] = useState(() => [new ItemClass('Skoda', 'Jármű'), new ItemClass("Opel", "Jármű")]);
+
+
 
     function createItem(name: string, category: string) {
         const item = new ItemClass(name, category);
         Items.push(item);
+        setItems(Items)
         console.log(Items);
     }
 
     function handleRemove(item: ItemClass) {
         setToggleConfirmation(true);
-        setSelectedTodoDelete(item);
+        setSelectedItemDelete(item);
+        console.log(item)
     }
 
     function confirmDelete () {
-        const todo = selectedTodoDelete;
-        const updatedItems = Items.filter(it => it !== todo);
+        const item = selectedItemDelete;
+        const updatedItems = Items.filter(it => it !== item);
         setItems(updatedItems);
         setToggleConfirmation(false);
     }
@@ -40,7 +44,7 @@ function ItemCreator() {
                    value={page ? "Back to main" : "New item"}/>
 
 
-            {page ?
+            {page ? //A tárgy létrehozása rész
                 <div>
 
                     <h1>ItemClass Creation</h1>
@@ -54,12 +58,13 @@ function ItemCreator() {
 
                         <div className="Row">
                             <p>ItemClass Category: </p>
-                            <input type="" onChange={(e) => setItemCategory(e.target.value)}/>
+                            <input type="text" onChange={(e) => setItemCategory(e.target.value)}/>
                         </div>
 
                         <div className="Row">
                             <input type="button" onClick={() => {
                                 createItem(itemName, itemCategory)
+                                setPage(false);
                             }} value="Create ItemClass"/>
                         </div>
 
@@ -68,6 +73,7 @@ function ItemCreator() {
 
                 : //A két oldal elválasztója
 
+                //A főoldal rész
                 <div>
 
                     <h1 style={{textAlign: "center"}}>Home</h1>
@@ -85,7 +91,7 @@ function ItemCreator() {
                             <input type="text" onChange={(e) => setSearchedName(e.target.value)}/>
                         </div>
 
-                    {Items.map((item, i) => (<ItemItem key={i} item={item} onRemove={() => handleRemove(item)}/>))};
+                    {items.map((item, i) => (<ItemItem key={i} item={item} onRemove={() => handleRemove(item)}/>))};
                     {toggleConfirmation && <div><p>Confirmation</p> <button onClick={confirmDelete}>Confirm</button></div>}
 
                 </div>
