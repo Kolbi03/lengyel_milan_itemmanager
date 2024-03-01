@@ -3,9 +3,9 @@ import './App.css'
 import ItemClass from "./ItemClass";
 import ItemItem from "./Item";
 
-export const Items: ItemClass[] = [];
-
 function ItemCreator() {
+
+    const allCategories = ['cpu', 'ram', 'gpu', 'psu', 'motherboard', 'storage']
 
     const [currentCategory, setCurrentCategory] = useState('');
     const [itemName, setItemName] = useState('');
@@ -14,26 +14,25 @@ function ItemCreator() {
     const [searchedName, setSearchedName] = useState('');
     const [toggleConfirmation, setToggleConfirmation] = useState(false);
     const [selectedItemDelete, setSelectedItemDelete] = useState<ItemClass>();
-    const [items, setItems] = useState(() => [new ItemClass('Skoda', 'Jármű'), new ItemClass("Opel", "Jármű")]);
+    const [items, setItems] = useState(() =>
+        [new ItemClass('RTX3060', 'gpu'), new ItemClass("Samsung EVO 970", "storage")]);
 
 
-
-    function createItem(name: string, category: string) {
-        const item = new ItemClass(name, category);
-        Items.push(item);
-        setItems(Items)
-        console.log(Items);
+    function createItem() {
+        const item = new ItemClass(itemName, itemCategory);
+        items.push(item);
+        setItemName('');
+        console.log(itemCategory)
     }
 
     function handleRemove(item: ItemClass) {
         setToggleConfirmation(true);
         setSelectedItemDelete(item);
-        console.log(item)
     }
 
     function confirmDelete () {
         const item = selectedItemDelete;
-        const updatedItems = Items.filter(it => it !== item);
+        const updatedItems = items.filter(it => it !== item);
         setItems(updatedItems);
         setToggleConfirmation(false);
     }
@@ -47,23 +46,30 @@ function ItemCreator() {
             {page ? //A tárgy létrehozása rész
                 <div>
 
-                    <h1>ItemClass Creation</h1>
+                    <h1>Item Creation</h1>
 
                     <form>
 
                         <div className="Row">
-                            <p>ItemClass name: </p>
+                            <p>Item Name: </p>
                             <input type="text" onChange={(e) => setItemName(e.target.value)}/>
                         </div>
 
                         <div className="Row">
-                            <p>ItemClass Category: </p>
-                            <input type="text" onChange={(e) => setItemCategory(e.target.value)}/>
+                            <p>Item Category: </p>
+                            <select onChange={event => setItemCategory(event.target.value)}>
+                                <option value="cpu">Processzor</option>
+                                <option value="ram">Memória</option>
+                                <option value="gpu">Videókártya</option>
+                                <option value="psu">Tápegység</option>
+                                <option value="motherboard">Alaplap</option>
+                                <option value="storage">Háttértár</option>
+                            </select>
                         </div>
 
                         <div className="Row">
                             <input type="button" onClick={() => {
-                                createItem(itemName, itemCategory)
+                                createItem();
                                 setPage(false);
                             }} value="Create ItemClass"/>
                         </div>
@@ -79,11 +85,12 @@ function ItemCreator() {
                     <h1 style={{textAlign: "center"}}>Home</h1>
 
                         <div className="Row">
-                            <input type="button" value="category 1" onClick={() => {setCurrentCategory('cat1')}}/>
-                            <input type="button" value="category 2" onClick={() => {setCurrentCategory('cat2')}}/>
-                            <input type="button" value="category 3" onClick={() => {setCurrentCategory('cat3')}}/>
-                            <input type="button" value="category 4" onClick={() => {setCurrentCategory('cat4')}}/>
-                            <input type="button" value="category 5" onClick={() => {setCurrentCategory('cat5')}}/>
+                            <input type="button" value="Processzor" onClick={() => {setCurrentCategory('cpu')}}/>
+                            <input type="button" value="Memória" onClick={() => {setCurrentCategory('ram')}}/>
+                            <input type="button" value="Videókártya" onClick={() => {setCurrentCategory('gpu')}}/>
+                            <input type="button" value="Tápegység" onClick={() => {setCurrentCategory('psu')}}/>
+                            <input type="button" value="Alaplap" onClick={() => {setCurrentCategory('motherboard')}}/>
+                            <input type="button" value="Háttértár" onClick={() => {setCurrentCategory('storage')}}/>
                         </div>
 
                         <div className="Row">
@@ -91,14 +98,20 @@ function ItemCreator() {
                             <input type="text" onChange={(e) => setSearchedName(e.target.value)}/>
                         </div>
 
-                    {items.map((item, i) => (<ItemItem key={i} item={item} onRemove={() => handleRemove(item)}/>))};
-                    {toggleConfirmation && <div><p>Confirmation</p> <button onClick={confirmDelete}>Confirm</button></div>}
+                    {items.filter(item => item.name.startsWith(searchedName))
+                        .filter(item => currentCategory.includes(item.category))
+                        .map((items, i) => (<ItemItem key={i} item={items} onRemove={() => handleRemove(items)}/>))}
+
+                    {toggleConfirmation && <div><p>Confirmation</p>
+                        <button onClick={confirmDelete}>Confirm</button>
+                        <button onClick={() => setToggleConfirmation(false)}>Cancel</button>
+                    </div>}
 
                 </div>
 
             }
         </div>
-    );
+    )
 }
 
 export default ItemCreator;
