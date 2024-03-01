@@ -5,7 +5,6 @@ import ItemItem from "./Item";
 
 function ItemCreator() {
 
-    const allCategories = ['cpu', 'ram', 'gpu', 'psu', 'motherboard', 'storage']
 
     const [currentCategory, setCurrentCategory] = useState('');
     const [itemName, setItemName] = useState('');
